@@ -7,7 +7,7 @@ class AppCustomButton extends StatelessWidget {
   final double width;
   const AppCustomButton({
     super.key,
-    this.onPressed,
+    required this.onPressed,
     required this.text,
     required this.width,
   });
@@ -18,7 +18,7 @@ class AppCustomButton extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         width: width,
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           gradient: gradientColor,
           borderRadius: BorderRadius.circular(8),
@@ -26,6 +26,7 @@ class AppCustomButton extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(color: mainWhiteColor, fontSize: 16),
+          textAlign: TextAlign.center,
         ),
       ),
     );

@@ -31,10 +31,9 @@ class CustomInput extends StatelessWidget {
         prefixIcon: Icon(icon, color: primaryColor, size: 20),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: Divider.createBorderSide(context),
+          borderSide: BorderSide.none,
         ),
         filled: true,
-        fillColor: mobileSearchColor,
       ),
       keyboardType: textInputType,
     );
