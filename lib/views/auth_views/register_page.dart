@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:socially_app/utils/constants/colors.dart';
 import 'package:socially_app/widgets/reusable/custom_button.dart';
 import 'package:socially_app/widgets/reusable/custom_input.dart';
@@ -22,8 +24,22 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  final TextEditingController _imageController = TextEditingController();
 
   File? _imageFile;
+
+  // method to pick image
+  Future<void> _pickImage(ImageSource source) async {
+    // create an instance of ImagePicker
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: source);
+
+    if (pickedImage != null) {
+      setState(() {
+        _imageFile = File(pickedImage.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Image(
-                      image: AssetImage("lib/assets/logo.png"),
+                      image: AssetImage("lib/assets/images/logo.png"),
                       height: 70,
                       fit: BoxFit.cover,
                     ),
@@ -71,7 +87,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
 
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              _pickImage(ImageSource.gallery);
+                            },
                             icon: Icon(Icons.add_a_photo),
                           ),
                         ],
@@ -181,7 +199,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
 
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          GoRouter.of(context).pushReplacement('/login');
+                        },
                         child: Text(
                           "Already have an account? Log in",
                           style: TextStyle(color: primaryColor, fontSize: 14),
