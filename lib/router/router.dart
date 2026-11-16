@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:socially_app/views/auth_views/login_page.dart';
 import 'package:socially_app/views/auth_views/register_page.dart';
+import 'package:socially_app/views/main_screens/main_screen.dart';
 import 'package:socially_app/views/responsive/mobile_layout.dart';
 import 'package:socially_app/views/responsive/responsive_layout.dart';
 import 'package:socially_app/views/responsive/web_layout.dart';
@@ -54,6 +55,15 @@ class RouterClass {
         name: "Login",
         builder: (context, state) {
           return LoginPage();
+        },
+      ),
+
+      // main screen
+      GoRoute(
+        path: '/main-screen',
+        name: "Main screen",
+        builder: (context, state) {
+          return MainScreen();
         },
       ),
     ],

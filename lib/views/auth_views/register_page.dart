@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:socially_app/models/user_model.dart';
+import 'package:socially_app/services/users/user_service.dart';
+import 'package:socially_app/services/users/user_storage.dart';
 import 'package:socially_app/utils/constants/colors.dart';
 import 'package:socially_app/widgets/reusable/custom_button.dart';
 import 'package:socially_app/widgets/reusable/custom_input.dart';
@@ -28,6 +31,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   File? _imageFile;
 
+  bool _isLoading = false;
+
   // method to pick image
   Future<void> _pickImage(ImageSource source) async {
     // create an instance of ImagePicker
@@ -37,6 +42,75 @@ class _RegisterPageState extends State<RegisterPage> {
     if (pickedImage != null) {
       setState(() {
         _imageFile = File(pickedImage.path);
+      });
+    }
+  }
+
+  // sign up with email and password
+  Future<void> _createUser(BuildContext context) async {
+    // check form validates
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // if image file is not null get download url of the profile image
+      if (_imageFile != null) {
+        final String imageurl = await UserProfileStorageService().uploadImage(
+          profileImage: _imageFile!,
+          userEmail: _emailController.text,
+        );
+
+        _imageController.text = imageurl;
+      }
+
+      final UserModel user = UserModel(
+        userId: "",
+        name: _nameController.text,
+        email: _emailController.text,
+        jobTitle: _jobTitleController.text,
+        imageUrl: _imageController.text,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        password: _passwordController.text,
+        followers: 0,
+      );
+
+      await UserService().saveUser(user);
+
+      // display message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("New account created successfully"),
+          duration: Duration(seconds: 1),
+        ),
+      );
+
+      // clear fields
+      _nameController.clear();
+      _emailController.clear();
+      _jobTitleController.clear();
+      _passwordController.clear();
+      _confirmPasswordController.clear();
+
+      Future.delayed(Duration(seconds: 2));
+
+      // navigate to main screen
+      GoRouter.of(context).go('/main-screen');
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error in creating new user : $error"),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
       });
     }
   }
@@ -188,11 +262,15 @@ class _RegisterPageState extends State<RegisterPage> {
 
                       SizedBox(height: 10),
 
-                      AppCustomButton(
-                        text: "Sign Up",
-                        width: double.infinity,
-                        onPressed: () {},
-                      ),
+                      _isLoading
+                          ? CircularProgressIndicator()
+                          : AppCustomButton(
+                              text: "Sign Up",
+                              width: double.infinity,
+                              onPressed: () async {
+                                await _createUser(context);
+                              },
+                            ),
 
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.02,

@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:socially_app/services/auth/auth_service.dart';
 import 'package:socially_app/utils/constants/colors.dart';
 import 'package:socially_app/widgets/reusable/custom_button.dart';
 import 'package:socially_app/widgets/reusable/custom_input.dart';
@@ -17,8 +16,70 @@ class _LoginPageState extends State<LoginPage> {
   // fields
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+
+  // login user with email and password
+  Future<void> _loginWithEmailAndPassword(BuildContext context) async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    try {
+      await AuthService().signInWithEmailPasssword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // display message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Logged in"), duration: Duration(seconds: 1)),
+      );
+
+      // clear fields
+      _emailController.clear();
+      _passwordController.clear();
+
+      Future.delayed(Duration(seconds: 2));
+
+      // navigate to main screen
+      GoRouter.of(context).go('/main-screen');
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error in login with email and password : $error"),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    }
+  }
+
+  // sign in with google
+  Future<void> _signInWithGoogle(BuildContext context) async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    try {
+      await AuthService().signInWithGoogle();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Signed in with Google"),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    } catch (error) {
+      print("Error in sign in with google : $error");
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error in signing with google : $error"),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,22 +110,6 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: [
                       CustomInput(
-                        controller: _nameController,
-                        labelText: "Name",
-                        icon: Icons.person,
-                        textInputType: TextInputType.text,
-                        obscureText: false,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Please enter your name";
-                          }
-                          return null;
-                        },
-                      ),
-
-                      SizedBox(height: 10),
-
-                      CustomInput(
                         controller: _emailController,
                         labelText: "Email",
                         icon: Icons.email,
@@ -85,10 +130,31 @@ class _LoginPageState extends State<LoginPage> {
 
                       SizedBox(height: 10),
 
+                      CustomInput(
+                        controller: _passwordController,
+                        labelText: "Password",
+                        icon: Icons.lock,
+                        textInputType: TextInputType.text,
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter your password";
+                          }
+                          if (value.length < 6) {
+                            return "Your password length must be more than 6 characters";
+                          }
+                          return null;
+                        },
+                      ),
+
+                      SizedBox(height: 10),
+
                       AppCustomButton(
                         text: "Log in",
                         width: double.infinity,
-                        onPressed: () {},
+                        onPressed: () async {
+                          await _loginWithEmailAndPassword(context);
+                        },
                       ),
 
                       SizedBox(
@@ -108,7 +174,9 @@ class _LoginPageState extends State<LoginPage> {
                       AppCustomButton(
                         text: "Sign in with Google",
                         width: double.infinity,
-                        onPressed: () {},
+                        onPressed: () async {
+                          await _signInWithGoogle(context);
+                        },
                       ),
 
                       SizedBox(
