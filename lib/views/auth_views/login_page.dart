@@ -55,11 +55,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // sign in with google
-  Future<void> _signInWithGoogle(BuildContext context) async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
+  Future<void> _createNewUserWithGoogle(BuildContext context) async {
     try {
       await AuthService().signInWithGoogle();
 
@@ -69,6 +65,11 @@ class _LoginPageState extends State<LoginPage> {
           duration: Duration(seconds: 1),
         ),
       );
+
+      Future.delayed(Duration(seconds: 2));
+
+      // navigate to main screen
+      GoRouter.of(context).go('/main-screen');
     } catch (error) {
       print("Error in sign in with google : $error");
 
@@ -175,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                         text: "Sign in with Google",
                         width: double.infinity,
                         onPressed: () async {
-                          await _signInWithGoogle(context);
+                          await _createNewUserWithGoogle(context);
                         },
                       ),
 

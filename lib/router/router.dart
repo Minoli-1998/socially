@@ -9,7 +9,7 @@ import 'package:socially_app/views/responsive/web_layout.dart';
 
 class RouterClass {
   final router = GoRouter(
-    initialLocation: '/register',
+    initialLocation: '/',
     errorPageBuilder: (context, state) {
       return MaterialPage(
         child: Scaffold(
