@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:socially_app/views/auth_views/register_page.dart';
-import 'package:socially_app/views/main_screens/main_screen.dart';
+import 'package:socially_app/views/auth_views/login_page.dart';
+import 'package:socially_app/views/main_screen.dart';
 
 class Wrapper extends StatelessWidget {
   const Wrapper({super.key});
@@ -16,7 +16,7 @@ class Wrapper extends StatelessWidget {
         } else if (snapshot.hasData) {
           return MainScreen();
         } else {
-          return RegisterPage();
+          return LoginPage();
         }
       },
     );

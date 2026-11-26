@@ -7,6 +7,7 @@ import 'package:socially_app/models/user_model.dart';
 import 'package:socially_app/services/users/user_service.dart';
 import 'package:socially_app/services/users/user_storage.dart';
 import 'package:socially_app/utils/constants/colors.dart';
+import 'package:socially_app/utils/functions/functions.dart';
 import 'package:socially_app/widgets/reusable/custom_button.dart';
 import 'package:socially_app/widgets/reusable/custom_input.dart';
 
@@ -83,11 +84,9 @@ class _RegisterPageState extends State<RegisterPage> {
       await UserService().saveUser(user);
 
       // display message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("New account created successfully"),
-          duration: Duration(seconds: 1),
-        ),
+      UtilsFunctions().displaySnackBar(
+        context: context,
+        message: "New account created successfully",
       );
 
       // clear fields
@@ -102,11 +101,9 @@ class _RegisterPageState extends State<RegisterPage> {
       // navigate to main screen
       GoRouter.of(context).go('/main-screen');
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Error in creating new user : $error"),
-          duration: Duration(seconds: 1),
-        ),
+      UtilsFunctions().displaySnackBar(
+        context: context,
+        message: "Error in creating new user : $error",
       );
     } finally {
       setState(() {

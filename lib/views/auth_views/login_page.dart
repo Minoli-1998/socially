@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:socially_app/services/auth/auth_service.dart';
 import 'package:socially_app/utils/constants/colors.dart';
+import 'package:socially_app/utils/functions/functions.dart';
 import 'package:socially_app/widgets/reusable/custom_button.dart';
 import 'package:socially_app/widgets/reusable/custom_input.dart';
 
@@ -32,9 +33,7 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       // display message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Logged in"), duration: Duration(seconds: 1)),
-      );
+      UtilsFunctions().displaySnackBar(context: context, message: "Logged in");
 
       // clear fields
       _emailController.clear();
@@ -45,11 +44,9 @@ class _LoginPageState extends State<LoginPage> {
       // navigate to main screen
       GoRouter.of(context).go('/main-screen');
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Error in login with email and password : $error"),
-          duration: Duration(seconds: 1),
-        ),
+      UtilsFunctions().displaySnackBar(
+        context: context,
+        message: "Error in login with email and password : $error",
       );
     }
   }
@@ -59,11 +56,9 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await AuthService().signInWithGoogle();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Signed in with Google"),
-          duration: Duration(seconds: 1),
-        ),
+      UtilsFunctions().displaySnackBar(
+        context: context,
+        message: "Signed in with Google",
       );
 
       Future.delayed(Duration(seconds: 2));
@@ -73,11 +68,9 @@ class _LoginPageState extends State<LoginPage> {
     } catch (error) {
       print("Error in sign in with google : $error");
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Error in signing with google : $error"),
-          duration: Duration(seconds: 1),
-        ),
+      UtilsFunctions().displaySnackBar(
+        context: context,
+        message: "Error in signing with google : $error",
       );
     }
   }
