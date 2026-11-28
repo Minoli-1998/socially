@@ -14,7 +14,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   // fields
-  int _currentIndex = 0;
+  int _currentIndex = 2;
   final _pages = [
     HomeScreen(),
     SearchUsersScreen(),
@@ -43,7 +43,7 @@ class _MainScreenState extends State<MainScreen> {
             label: "Create",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.movie_creation_outlined),
+            icon: Icon(Icons.video_library),
             label: "Reels",
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
